@@ -5,7 +5,7 @@ from Project.functions import validate_url, login
 
 # Driver settings
 options = Options()
-# options.add_argument("--headless")
+options.add_argument("--headless")
 options.add_experimental_option(
     'prefs', {
         'download.prompt_for_download': False,
