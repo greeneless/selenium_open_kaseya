@@ -1,0 +1,11 @@
+.idea
+build
+venv
+venv/Scripts
+*.log
+*.txt
+*.cmd
+*.spec
+*.pyc
+*.pyo
+*.zip
