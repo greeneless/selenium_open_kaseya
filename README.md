@@ -11,15 +11,21 @@ RECOMMENDED INSTALL FOR CHROMEDRIVER:
 
 --Install ChromeDriver with chocolatey in Elevated PowerShell/Cmd:
 <b>choco install chromedriver</b>
+<br>
+CHROME UPDATES: Chrome automatically updates by default. As of the time of this readme (2020/09/22), Chrome 85 is in use. 
 
-CHROME UPDATES: Chrome automatically updates by default. As of the time of this readme (2020/09/22), Chrome 85 is in use. Chrome updates may cause the application to not launch properly until ChromeDriver is updated. Chrome updates may cause instability after ChromeDriver is updated until reivew/recommit occurrs ChromeDriver.exe requires an instance of Google Chrome installed https://chromedriver.chromium.org/downloads
+-- Chrome updates may cause the application to not launch properly until ChromeDriver is updated. 
 
+-- Chrome updates may cause instability after ChromeDriver is updated until reivew/recommit.
+
+-- ChromeDriver.exe requires an instance of Google Chrome installed. https://chromedriver.chromium.org/downloads
+<br>
 KASEYA UPDATES: Updates to the user interface could break this application and require a review/recommit
-
+<br>
 KASEYA UI: If your VSA has "classic UI enabled" in the System module, nothing here will work.
-
+<br>
 LOGINS: Password is masked with built in getpass() AuthAnvil and standard Kaseya MFA XPATH references are both supported.
-
+<br>
 COLUMN SETS APPLICATION: Option for headless is enabled - will run console only by default 
 
 -- get_user_column_sets will retrieve all column sets for the logged in user, then logout file is c:\temp\column_sets.json
