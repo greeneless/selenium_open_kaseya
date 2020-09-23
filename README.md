@@ -6,7 +6,7 @@ Public repository initiated by MSP Builder, LCC for Kaseya UI manipulation and a
 
 RECOMMENDED INSTALL FOR CHROMEDRIVER:
 
---Install Chocolatey in Elevated PowerShell:
+--<b>Install Chocolatey in Elevated PowerShell</b>:
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
 --Install ChromeDriver with chocolatey in Elevated PowerShell/Cmd:
