@@ -5,10 +5,11 @@ Public repository initiated by MSP Builder, LCC for Kaseya UI manipulation and a
 -- exes require ChromeDriver.exe to be available to the program but all other dependencies (including the Python interpreter) will be contained in the app.
 
 RECOMMENDED INSTALL FOR CHROMEDRIVER:<br>
---Install Chocolatey in Elevated PowerShell:<br>
-<b>Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))</b>
---Install ChromeDriver with chocolatey in Elevated PowerShell/Cmd:<br>
-<b>choco install chromedriver</b>
+--<br>Install Chocolatey in Elevated PowerShell:</b><br>
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+<br>
+--<b>Install ChromeDriver with chocolatey in Elevated PowerShell/Cmd:</b><br>
+choco install chromedriver
 <br><br>
 CHROME UPDATES: Chrome automatically updates by default. As of the time of this readme (2020/09/22), Chrome 85 is in use.<br>
 -- Chrome updates may cause the application to not launch properly until ChromeDriver is updated. <br>
