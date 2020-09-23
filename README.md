@@ -3,9 +3,9 @@ Public repository initiated by MSP Builder, LCC for Kaseya UI manipulation and a
 -- exes are created with <b>"python PyInstaller --onefile FileName.py"</b>
 
 -- exes require ChromeDriver.exe to be available to the program but all other dependencies (including the Python interpreter) will be contained in the app.
-
+<br><br>
 RECOMMENDED INSTALL FOR CHROMEDRIVER:<br>
---<br>Install Chocolatey in Elevated PowerShell:</b><br>
+--<b>Install Chocolatey in Elevated PowerShell:</b><br>
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 <br>
 --<b>Install ChromeDriver with chocolatey in Elevated PowerShell/Cmd:</b><br>
