@@ -1,7 +1,7 @@
 from json import dumps
 from time import sleep, time
 from selenium.common.exceptions import ElementClickInterceptedException
-from Project.functions import logout, agent, agent_procedures
+from Project.functions import agent, agent_procedures, logout
 from Project.main import main, driver
 
 if __name__ == '__main__':
@@ -22,6 +22,9 @@ sleep(4)
 # Access column sets - Manage
 driver.find_element_by_xpath('//span/span/span[text()="Column Sets"]').click()
 driver.find_element_by_xpath('//div[6]/a/span').click()
+sleep(1.5)
+
+print('Reading current user columns...')
 column_set_objects = driver.find_elements_by_xpath(
     '//span/div/div/div[3]/div/div[3]/div/table/tbody/tr[*]/td[2]/div/div')
 
@@ -62,20 +65,23 @@ for element in column_set_objects:
                     print('Improper button clicked, window not canceled')
                 else:
                     break
-        else:
-            print('No matching element for XPATH /html/body/div[' + str(ref) +
-                  ']/div[2]/div/div[2]/div/div/a[2]/span/span/span[2]')
+        # else:
+        #     print('No matching element for XPATH /html/body/div[' + str(ref) +
+        #           ']/div[2]/div/div[2]/div/div/a[2]/span/span/span[2]')
 driver.implicitly_wait(3)
 
 # Dump column sets JSON contents below
 json = dumps(column_sets_data, indent=2)
 
 # Write formatted objects to file
+print('Writing column_set objects to c:\\temp\\column_sets.json. If a file match is present, overwriting...')
 f = open('c:\\temp\\column_sets.json', 'w')
 f.write(json)
 f.close()
+sleep(1)
 
 # Exit
+print('Logging out current user...')
 logout(driver)
 print('Program ' + program_name + ' completed successfully.')
 print("--- %s seconds ---" % (time() - start_time))

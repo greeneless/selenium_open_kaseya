@@ -1,7 +1,7 @@
 from re import compile
 from time import sleep
 from getpass import getpass
-
+from selenium.common.exceptions import NoSuchElementException, ElementNotVisibleException
 DEBUG = False
 
 
@@ -85,66 +85,81 @@ def login(driver):
         sleep(1)
         timeout += 1
         # MFA Configured? Is there a skip button?
-        skip_mfa_xpath = driver.find_elements_by_xpath('//button[contains(text(),"No Thanks")]')
-        if skip_mfa_xpath:
+        mfa_xpath = driver.find_elements_by_xpath('//input[contains(@maxlength,"6")]')
+        mfa_xpath.append(driver.find_elements_by_xpath(
+            '//label[contains(text(),"AuthAnvil") or contains(text(),"Passly")]'))
+        if mfa_xpath:
             break
 
-    skip_mfa_xpath = driver.find_elements_by_xpath('//button[contains(text(),"No Thanks")]')
-    if skip_mfa_xpath:
-        # Skip for now
-        skip_mfa_xpath[0].click()
-        print('MFA not configured, successfully signed in\n')
+    mfa_xpath = driver.find_elements_by_xpath('//input[contains(@maxlength,"6")]')
+    mfa_xpath.append(driver.find_elements_by_xpath(
+        '//label[contains(text(),"AuthAnvil") or contains(text(),"Passly")]'))
+    if not mfa_xpath:
+        sleep(2)
+        try:
+            driver.find_element_by_xpath(agent(driver)).click()
+        except NoSuchElementException:
+            print('Unable to locate MFA input. Unable to locate side panel nav.')
+            print('Please ensure that MFA is configured for the user before executing this application.')
+        else:
+            pass
     else:
-        # No matching element for 'no thanks button' request OTP
-        authenticated = False
-        while not authenticated:
-            # Standard Kaseya MFA check
-            mfa_input = driver.find_elements_by_xpath('//input[contains(@maxlength,"6")]')
-            if not mfa_input:
-                # Auth Anvil check
-                check = driver.find_elements_by_xpath(
-                    '//label[contains(text(),"AuthAnvil") or contains(text(),"Passly")]')
-                if check:
-                    # AuthAnvil confirmed
-                    mfa_input = driver.find_elements_by_xpath('//input[@type="password" and @role="textbox"]')
-                    mfa_code = input('Provide the MFA OTP (AuthAnvil/Passly): ')
-                    submit_button = driver.find_element_by_xpath(
-                        '/html/body/div[3]/div/span/div/div/div/span/div/a/span/span/span[2]')
+        try:
+            mfa_xpath[0].send_keys('111111')
+        except ElementNotVisibleException:
+            pass
+        else:
+            mfa_xpath[0].clear()
+            # MFA needs to be entered.
+            authenticated = False
+            while not authenticated:
+                # Standard Kaseya MFA check
+                mfa_input = driver.find_elements_by_xpath('//input[contains(@maxlength,"6")]')
+                if not mfa_input:
+                    # Auth Anvil check
+                    check = driver.find_elements_by_xpath(
+                        '//label[contains(text(),"AuthAnvil") or contains(text(),"Passly")]')
+                    if check:
+                        # AuthAnvil confirmed
+                        mfa_input = driver.find_elements_by_xpath('//input[@type="password" and @role="textbox"]')
+                        mfa_code = input('Provide the MFA OTP (AuthAnvil/Passly): ')
+                        submit_button = driver.find_element_by_xpath(
+                            '/html/body/div[3]/div/span/div/div/div/span/div/a/span/span/span[2]')
+                        mfa_input[0].clear()
+                        mfa_input[0].send_keys(mfa_code)
+                        submit_button.click()
+                        sleep(1)
+
+                        error_check = driver.find_elements_by_xpath('//input[@id="UsernameTextbox"]')
+                        if not error_check:
+                            print('Authentication successful (AuthAnvil/Passly)\n')
+                            authenticated = True
+                        else:
+                            print('Authentication failed - Invalid MFA code\n')
+                    else:
+                        # No match, or invalid Auth Anvil entry (returns to un/pw submission - exit)
+                        print('Unable to locate MFA input XPATH')
+                        print('If you entered an invalid code for AuthAnvil, restart this script.')
+                        print('Sleeping for 10s - CTRL+C to exit early.')
+                        sleep(10)
+                        driver.quit()
+                        exit(87)
+                        break
+                else:
+                    # Standard Kaseya MFA confirmed
+                    mfa_code = input('Provide the MFA OTP: ')
+                    submit_button = driver.find_element_by_xpath('//button[text()="Submit"]')
                     mfa_input[0].clear()
                     mfa_input[0].send_keys(mfa_code)
                     submit_button.click()
                     sleep(1)
 
-                    error_check = driver.find_elements_by_xpath('//input[@id="UsernameTextbox"]')
+                    error_check = driver.find_elements_by_xpath('//div[@class="authCodeError"]')
                     if not error_check:
-                        print('Authentication successful (AuthAnvil/Passly)\n')
+                        print('Authentication successful\n')
                         authenticated = True
                     else:
                         print('Authentication failed - Invalid MFA code\n')
-                else:
-                    # No match, or invalid Auth Anvil entry (returns to un/pw submission - exit)
-                    print('Unable to locate MFA input XPATH')
-                    print('If you entered an invalid code for AuthAnvil, restart this script.')
-                    print('Sleeping for 10s - CTRL+C to exit early.')
-                    sleep(10)
-                    driver.quit()
-                    exit(87)
-                    break
-            else:
-                # Standard Kaseya MFA confirmed
-                mfa_code = input('Provide the MFA OTP: ')
-                submit_button = driver.find_element_by_xpath('//button[text()="Submit"]')
-                mfa_input[0].clear()
-                mfa_input[0].send_keys(mfa_code)
-                submit_button.click()
-                sleep(1)
-
-                error_check = driver.find_elements_by_xpath('//div[@class="authCodeError"]')
-                if not error_check:
-                    print('Authentication successful\n')
-                    authenticated = True
-                else:
-                    print('Authentication failed - Invalid MFA code\n')
 
 
 def logout(driver):
